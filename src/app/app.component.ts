@@ -1,16 +1,8 @@
-import { Component } from '@angular/core';
+import { Component , OnInit } from '@angular/core';
 import { Hero } from './hero';
+import { HeroService } from './hero.service';
 
-const HEROES: Hero[] = [
-  {id:101,name:'Tanak'},
-  {id:102,name:'Annie'},
-  {id:103,name:'Garima'},
-  {id:104,name:'Shivani'},
-  {id:105,name:'Rubberman'},
-  {id:106,name:'Dynama'},
-  {id:107,name:'Magenta'},
-  {id:108,name:'Tupperman'},
-];
+
 
 @Component({
   selector: 'app-root',
@@ -29,15 +21,28 @@ const HEROES: Hero[] = [
 
   `,
 //'selectedHero' property belongs to the template component but 'hero' property belongs to some other components template therefore it should carry @input decorator
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [HeroService]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'Tour of Heroes';
+  heroes: Hero[];
   selectedHero : Hero;
-  heroes = HEROES;
 
+  constructor(private heroService: HeroService) { } //angular supplies an instance of HeroService when it creates an AppComponent
+  //  this.heroes = this.heroService.getHeroes();
+  getHeroes(): void {
+  this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+  }
+
+  ngOnInit(): void{
+    this.getHeroes();
+  }
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+
   }
+
+
 }
